@@ -17,6 +17,7 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 
 import br.com.project.bucket.domains.ResponseData;
+import br.com.project.bucket.exception.FileNotFound;
 
 @Component("storageGCP")
 public class StorageGCP implements AbstractStorage {
@@ -98,6 +99,9 @@ public class StorageGCP implements AbstractStorage {
 	public ResponseData getFileByName(String directory, String id, String nameFile) {
 		BlobId blobId = BlobId.of(bucketName, getLocation(directory, id, nameFile));
 		Blob blob = storage.get(blobId);
+		if (blob == null) {
+			throw new FileNotFound("O arquivo %s não foi localizado!".formatted(nameFile));
+		}
 		return new ResponseData(blob.getName(), Base64.encodeBase64String(blob.getContent()), true);
 	}
 
