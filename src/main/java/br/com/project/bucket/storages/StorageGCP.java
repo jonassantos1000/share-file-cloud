@@ -37,7 +37,7 @@ public class StorageGCP implements AbstractStorage {
 		BlobId blobId = BlobId.of(bucketName, location);
 		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 		storage.create(blobInfo, Base64.decodeBase64(file.getBase64()));
-		return new DataFileSave(location, file.getFileName());
+		return new DataFileSave(generetedId(location), file.getFileName());
 	}
 
 	@Override
@@ -58,21 +58,6 @@ public class StorageGCP implements AbstractStorage {
 		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix("/")).iterateAll();
 		blobs.forEach(blob -> blob.delete());
 
-		return true;
-	}
-
-	private String getLocation(String directory, String id, String name) {
-		return new StringBuilder(directory).append("/").append(id).append("/").append(name).toString();
-	}
-
-	private boolean isDirectoryEmpty(String directoryName) {
-		String directoryPrefix = directoryName.endsWith("/") ? directoryName : directoryName + "/";
-		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix(directoryPrefix)).iterateAll();
-		for (Blob blob : blobs) {
-			if (!blob.getName().equals(directoryPrefix)) {
-				return false; // O diretório não está vazio, pois contém outros blobs
-			}
-		}
 		return true;
 	}
 
@@ -107,6 +92,21 @@ public class StorageGCP implements AbstractStorage {
 
 		return new ResponseData(generetedId(blob.getName()), Paths.get(blob.getName()).getFileName().toString(),
 				Base64.encodeBase64String(blob.getContent()), true);
+	}
+	
+	private String getLocation(String directory, String id, String name) {
+		return new StringBuilder(directory).append("/").append(id).append("/").append(name).toString();
+	}
+
+	private boolean isDirectoryEmpty(String directoryName) {
+		String directoryPrefix = directoryName.endsWith("/") ? directoryName : directoryName + "/";
+		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix(directoryPrefix)).iterateAll();
+		for (Blob blob : blobs) {
+			if (!blob.getName().equals(directoryPrefix)) {
+				return false; // O diretório não está vazio, pois contém outros blobs
+			}
+		}
+		return true;
 	}
 	
 	private String generetedId(String directory) {
