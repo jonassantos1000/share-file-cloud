@@ -16,4 +16,10 @@ public class HandlerException {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
 	}
 	
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ResponseError> tratarErro404(IllegalArgumentException e, HttpServletRequest request){
+		ResponseError error = new ResponseError(e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+	
 }

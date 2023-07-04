@@ -13,5 +13,5 @@ public enum Directory {
 	public String getValue() {
 		return value;
 	}
-
+	
 }

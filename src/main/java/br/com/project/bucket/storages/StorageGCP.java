@@ -1,5 +1,7 @@
 package br.com.project.bucket.storages;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 
+import br.com.project.bucket.domains.DataFileSave;
 import br.com.project.bucket.domains.InfoFile;
 import br.com.project.bucket.domains.ResponseData;
 import br.com.project.bucket.exception.FileNotFound;
@@ -28,27 +31,24 @@ public class StorageGCP implements AbstractStorage {
 	private Storage storage;
 
 	@Override
-	public String saveFile(String directory, String id, InfoFile file) {
+	public DataFileSave saveFile(String directory, String id, InfoFile file) {
 		String location = getLocation(directory, id, file.getFileName());
 
 		BlobId blobId = BlobId.of(bucketName, location);
 		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 		storage.create(blobInfo, Base64.decodeBase64(file.getBase64()));
-		return location;
+		return new DataFileSave(location, file.getFileName());
 	}
 
 	@Override
-	public boolean deleteFile(String directory, String id, String nameFile) {
-		boolean response = false;
-		try {
-			String location = getLocation(directory, id, nameFile);
-			BlobId blobId = BlobId.of(bucketName, location);
-			response = storage.delete(blobId);
-			if (isDirectoryEmpty(directory)) {
-				deleteDirectory(directory);
-			}
-		} catch (Exception e) {
-			return false;
+	public boolean deleteFileById(String id) {
+		String location = getLocationById(id);
+		String directory = Paths.get(location).getParent().toString();
+		BlobId blobId = BlobId.of(bucketName, location);
+		
+		boolean response = storage.delete(blobId);
+		if (isDirectoryEmpty(directory)) {
+			deleteDirectory(directory);
 		}
 		return response;
 	}
@@ -80,24 +80,41 @@ public class StorageGCP implements AbstractStorage {
 	public List<ResponseData> getFilesInDirectory(String directory, String id) {
 		String directoryName = getLocation(directory, id, StringUtils.EMPTY);
 		String directoryPrefix = directoryName.endsWith("/") ? directoryName : directoryName + "/";
+		
+		if(isDirectoryEmpty(directoryPrefix)) {
+			throw new IllegalArgumentException("Diretório solicitado esta vazio.");
+		}
 
 		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix(directoryPrefix)).iterateAll();
 
 		List<ResponseData> fileList = new ArrayList<>();
-		blobs.forEach(blob -> fileList.add(new ResponseData(blob.getName().replaceAll(directoryName, StringUtils.EMPTY),
+		blobs.forEach(blob -> fileList.add(new ResponseData(generetedId(blob.getName()) ,Paths.get(blob.getName()).getFileName().toString(),
 				Base64.encodeBase64String(blob.getContent()), true)));
 
 		return fileList;
 	}
 
 	@Override
-	public ResponseData getFileByName(String directory, String id, String nameFile) {
-		BlobId blobId = BlobId.of(bucketName, getLocation(directory, id, nameFile));
+	public ResponseData getFileById(String id) {
+		String path = getLocationById(id);
+
+		BlobId blobId = BlobId.of(bucketName, path);
 		Blob blob = storage.get(blobId);
+
 		if (blob == null) {
-			throw new FileNotFound("O arquivo %s não foi localizado!".formatted(nameFile));
+			throw new FileNotFound("ID %s não foi localizado!".formatted(id));
 		}
-		return new ResponseData(blob.getName(), Base64.encodeBase64String(blob.getContent()), true);
+
+		return new ResponseData(generetedId(blob.getName()), Paths.get(blob.getName()).getFileName().toString(),
+				Base64.encodeBase64String(blob.getContent()), true);
+	}
+	
+	private String generetedId(String directory) {
+		return Base64.encodeBase64String(directory.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	private String getLocationById(String fileId) {
+		return new String(Base64.decodeBase64(fileId));
 	}
 
 }
