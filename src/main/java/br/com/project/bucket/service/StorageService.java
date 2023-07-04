@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import br.com.project.bucket.domains.InfoFile;
 import br.com.project.bucket.domains.ResponseData;
 import br.com.project.bucket.domains.enums.Directory;
 import br.com.project.bucket.exception.FileNotFound;
@@ -20,7 +20,7 @@ public class StorageService {
 	@Qualifier("storageGCP")
 	private AbstractStorage storage;
 	
-	public String saveFile(Directory directory, String id, MultipartFile file) {
+	public String saveFile(Directory directory, String id, InfoFile file) {
 		return storage.saveFile(directory.getValue(), id, file).replaceAll(directory.getValue(), StringUtils.EMPTY);
 	}
 	

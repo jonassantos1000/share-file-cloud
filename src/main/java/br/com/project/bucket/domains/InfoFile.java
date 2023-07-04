@@ -2,15 +2,15 @@ package br.com.project.bucket.domains;
 
 public class InfoFile {
 	private String fileName;
-	private String extension;
+	private String base64;
 
 	public InfoFile() {
 
 	}
 
-	public InfoFile(String fileName, String extension) {
+	public InfoFile(String fileName, String base64) {
 		this.fileName = fileName;
-		this.extension = extension;
+		this.base64 = base64;
 	}
 
 	public String getFileName() {
@@ -21,15 +21,11 @@ public class InfoFile {
 		this.fileName = fileName;
 	}
 
-	public String getExtension() {
-		return extension;
+	public String getBase64() {
+		return base64;
 	}
 
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-	
-	public String getFileNameWithExtesion() {
-		return getFileName() + getExtension();
+	public void setBase64(String base64) {
+		this.base64 = base64;
 	}
 }

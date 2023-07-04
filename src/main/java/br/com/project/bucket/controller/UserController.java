@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import br.com.project.bucket.domains.InfoFile;
 import br.com.project.bucket.domains.ResponseData;
@@ -29,20 +27,20 @@ public class UserController {
 	private StorageService service;
 
 	@PostMapping(value = "/{id}")
-	public ResponseEntity<ResponseData> saveFile(@PathVariable String id, @RequestParam("file") MultipartFile file) throws URISyntaxException{
+	public ResponseEntity<ResponseData> saveFile(@PathVariable String id, @RequestBody InfoFile file) throws URISyntaxException{
 		String path = service.saveFile(Directory.USER, id, file);
 		URI uri = new URI(path);
-		return ResponseEntity.created(uri).body(new ResponseData(file.getOriginalFilename(), path, true));
+		return ResponseEntity.created(uri).body(new ResponseData(file.getFileName(), path, true));
 	}
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<ResponseData> removeFile(@PathVariable String id, @RequestBody InfoFile infoFile){
-		return ResponseEntity.ok(new ResponseData(infoFile.getFileName(), infoFile.getFileNameWithExtesion(), service.deleteFile(Directory.USER, id, infoFile.getFileNameWithExtesion())));
+		return ResponseEntity.ok(new ResponseData(infoFile.getFileName(), infoFile.getFileName(), service.deleteFile(Directory.USER, id, infoFile.getFileName())));
 	}
 	
 	@GetMapping(value = "/{name}")
 	public ResponseEntity<ResponseData> getFileByName(@PathVariable String name, @RequestBody InfoFile infoFile){
-		return ResponseEntity.ok(service.findFileByName(Directory.USER, name, infoFile.getFileNameWithExtesion()));
+		return ResponseEntity.ok(service.findFileByName(Directory.USER, name, infoFile.getFileName()));
 	}
 	
 	@GetMapping(value = "/directory/{id}")
