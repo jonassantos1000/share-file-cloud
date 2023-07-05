@@ -1,5 +1,9 @@
 package br.com.project.bucket.domains;
 
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.codec.binary.Base64;
+
 public class ResponseData {
 	private String id;
 	private String name;
@@ -15,6 +19,7 @@ public class ResponseData {
 		this.name = name;
 		this.file = file;
 		this.result = result;
+		encodeId();
 	}
 
 	public String getId() {
@@ -47,6 +52,10 @@ public class ResponseData {
 
 	public void setName(String nome) {
 		this.name = nome;
+	}
+	
+	private void encodeId() {
+		this.id = Base64.encodeBase64String(this.id.getBytes(StandardCharsets.UTF_8));
 	}
 
 }

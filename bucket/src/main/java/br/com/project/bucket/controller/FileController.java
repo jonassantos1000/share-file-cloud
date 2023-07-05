@@ -36,6 +36,16 @@ public class FileController {
 		}
 	}
 	
+	@PostMapping(value = "/lote/{directory}/{directoryId}")
+	public ResponseEntity<DataFileSave> saveFileAll(@PathVariable String directory, @PathVariable String directoryId, @RequestBody List<InfoFile> file){
+		try {
+			DataFileSave dataFile = service.saveFileAll(Directory.valueOf(directory.toUpperCase()), directoryId, file);
+			return ResponseEntity.status(HttpStatus.CREATED).body(dataFile);
+		}catch(IllegalArgumentException e) {
+			throw new IllegalArgumentException("Diretório informado é inválido.");
+		}
+	}
+	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> removeFile(@PathVariable String id){
 		service.deleteFileById(id);
@@ -50,6 +60,12 @@ public class FileController {
 	@GetMapping(value = "/{directory}/{directoryId}")
 	public ResponseEntity<List<ResponseData>> getDirectory(@PathVariable String directory, @PathVariable String directoryId){
 		List<ResponseData> listResponse = service.findDirectory(Directory.valueOf(directory.toUpperCase()), directoryId);
+		return ResponseEntity.ok(listResponse);
+	}
+	
+	@GetMapping(value = "/lote/{directoryEncode}")
+	public ResponseEntity<List<ResponseData>> getDirectory(@PathVariable String directoryEncode){
+		List<ResponseData> listResponse = service.findDirectory(directoryEncode);
 		return ResponseEntity.ok(listResponse);
 	}
 }

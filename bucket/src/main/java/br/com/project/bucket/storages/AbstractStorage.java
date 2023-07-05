@@ -13,4 +13,5 @@ public interface AbstractStorage {
 	boolean deleteDirectory(String directory);
 	ResponseData getFileById(String id);
 	List<ResponseData> getFilesInDirectory(String directory, String id);
+	String getLocation(String directory, String id, String name);
 }

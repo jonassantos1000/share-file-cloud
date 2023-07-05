@@ -1,6 +1,5 @@
 package br.com.project.bucket.storages;
 
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +36,12 @@ public class StorageGCP implements AbstractStorage {
 		BlobId blobId = BlobId.of(bucketName, location);
 		BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
 		storage.create(blobInfo, Base64.decodeBase64(file.getBase64()));
-		return new DataFileSave(generetedId(location), file.getFileName());
+		return new DataFileSave(location, file.getFileName());
 	}
 
 	@Override
 	public boolean deleteFileById(String id) {
-		String location = getLocationById(id);
+		String location = id;
 		String directory = Paths.get(location).getParent().toString();
 		BlobId blobId = BlobId.of(bucketName, location);
 		
@@ -73,7 +72,7 @@ public class StorageGCP implements AbstractStorage {
 		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix(directoryPrefix)).iterateAll();
 
 		List<ResponseData> fileList = new ArrayList<>();
-		blobs.forEach(blob -> fileList.add(new ResponseData(generetedId(blob.getName()) ,Paths.get(blob.getName()).getFileName().toString(),
+		blobs.forEach(blob -> fileList.add(new ResponseData(blob.getName(), Paths.get(blob.getName()).getFileName().toString(),
 				Base64.encodeBase64String(blob.getContent()), true)));
 
 		return fileList;
@@ -81,7 +80,7 @@ public class StorageGCP implements AbstractStorage {
 
 	@Override
 	public ResponseData getFileById(String id) {
-		String path = getLocationById(id);
+		String path = id;
 
 		BlobId blobId = BlobId.of(bucketName, path);
 		Blob blob = storage.get(blobId);
@@ -90,11 +89,12 @@ public class StorageGCP implements AbstractStorage {
 			throw new FileNotFound("ID %s não foi localizado!".formatted(id));
 		}
 
-		return new ResponseData(generetedId(blob.getName()), Paths.get(blob.getName()).getFileName().toString(),
+		return new ResponseData(blob.getName(), Paths.get(blob.getName()).getFileName().toString(),
 				Base64.encodeBase64String(blob.getContent()), true);
 	}
 	
-	private String getLocation(String directory, String id, String name) {
+	@Override
+	public String getLocation(String directory, String id, String name) {
 		return new StringBuilder(directory).append("/").append(id).append("/").append(name).toString();
 	}
 
@@ -109,12 +109,4 @@ public class StorageGCP implements AbstractStorage {
 		return true;
 	}
 	
-	private String generetedId(String directory) {
-		return Base64.encodeBase64String(directory.getBytes(StandardCharsets.UTF_8));
-	}
-	
-	private String getLocationById(String fileId) {
-		return new String(Base64.decodeBase64(fileId));
-	}
-
 }
