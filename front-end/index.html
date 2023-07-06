@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+
+<body class="d-flex flex-column vh-100">
+    <nav class="navbar bg-primary" data-bs-theme="dark">
+        <div class="container">
+            <a class="navbar-brand d-flex" href="#">
+                <img src="./assets/img/logo.png" alt="Logo" class="img-fluid pe-2 col-1">
+                <h1 class="ps-3 fs-3 align-items-center d-flex text-black-50">Cloud Share</h1>
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1">
+        <button onclick="start()"></button>
+    </main>
+
+    <footer class="bg-secondary">
+        <div class="container p-2">
+            <h3 class="fs-6 text-center text-white-50">©2023 Cloud Share File. Todos os direitos reservados. Cloud Share File.</h3>
+        </div>
+    </footer>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+    integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+    crossorigin="anonymous"></script>
+
+<script>
+    function start() {
+        fetch("http://localhost:8082/api-ms/upload/e173cb09-4cc5-449b-a1cd-0e61dd28031a")
+            .then(payload => payload.json())
+            .then(response => console.log(response))
+    }
+</script>
+
+</html>
