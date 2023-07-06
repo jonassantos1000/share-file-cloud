@@ -1,0 +1,36 @@
+.input-file {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: 33,37,41;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+.input-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 100px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.input-file-label {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.input-file-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.input-file:hover {
+    padding: 9px 14px;
+}
