@@ -34,3 +34,17 @@
 .input-file:hover {
     padding: 9px 14px;
 }
+
+*::-webkit-scrollbar {
+    width: 6px;               /* width of the entire scrollbar */
+  }
+  
+  *::-webkit-scrollbar-track {
+    background: rgba(170, 169, 167, 0.641);        /* color of the tracking area */
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(13,110,253);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    border: rgba(170, 169, 167, 0.641);  /* creates padding around scroll thumb */
+  }
