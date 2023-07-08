@@ -13,7 +13,7 @@
 <body class="d-flex flex-column vh-100">
     <nav class="navbar bg-primary" data-bs-theme="dark">
         <div class="container">
-            <a class="navbar-brand d-flex" href="#">
+            <a class="navbar-brand d-flex" href="./index.html">
                 <img src="./assets/img/logo.png" alt="Logo" class="img-fluid pe-2 col-1">
                 <h1 class="ps-3 fs-3 align-items-center d-flex text-info">Cloud Share</h1>
             </a>
@@ -24,10 +24,10 @@
 
         <div class="d-flex flex-column align-items-center col-9 h-75">
             <div class="card col-7">
-                <div class="card-header d-flex justify-content-around align-items-center">
+                <div class="card-header d-flex justify-content-around align-items-center px-5">
                     <div class="d-flex flex-column">
                         <h5 class="card-title fs-4 col-12 text-wrap">Upload de arquivos</h5>
-                        <p class="fs-6 m-0"><span id="count-size">0</span> MB / 5 MB</p>
+                        <p class="fs-6 m-0"><span id="count-length">0</span> Arquivos - <span id="count-size">0</span> MB / 5 MB</p>
                     </div>
                     <div class="input-file btn col-sm-5 col-lg-2" id="file-container">
                         <img src="./assets/img/upload.png" alt="botao para upload" class="col-12">
@@ -51,7 +51,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Realizando upload</h1>
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Realizando <span class="modal-title fs-5" id="modal-action">upload</span> dos arquivos</h1>
                     </div>
                     <div class="modal-body d-flex justify-content-center">
                         <img id="loading" src="https://media.giphy.com/media/hWZBZjMMuMl7sWe0x8/giphy.gif">
@@ -65,7 +65,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="modal-successLabel">Upload Realizado com sucesso!</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" onclick="hiddenCardUploadSucess()"></button>
                     </div>
                     <div class="modal-body">
                         <p class="word-wrap">Os arquivos ficarão disponíveis por <span class="fw-bold">24 horas</span>,

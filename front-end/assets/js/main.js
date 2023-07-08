@@ -95,9 +95,11 @@ async function executeUpload() {
 }
 
 async function executeDownload(id){
+  showLoading("download")
   await downloadFiles(id);
   const url = new URL(window.location.href);
   window.location.href = `${url.origin}${url.pathname}`
+  hiddenLoading();
 }
 
 document.getElementById("arquivo").addEventListener("change", function () {

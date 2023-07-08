@@ -29,7 +29,7 @@ async function downloadFiles(id) {
     zip.file(fileName, new Blob([bytes], { type: "application/octet-stream" }));
   });
 
-  zip.generateAsync({ type: "blob" }).then(function (content) {
+  await zip.generateAsync({ type: "blob" }).then(function (content) {
     const url = URL.createObjectURL(content);
 
     const link = document.createElement("a");
@@ -74,7 +74,11 @@ function hasIdParam(param) {
   return urlParams.has(param);
 }
 
-function hiddenLoading() {
+function hiddenLoading(action=null) {
+  if (action){
+    document.getElementById("modal-action").textContent = action;
+  }
+
   document.getElementById("modal-loading").classList.remove("d-block");
   document.getElementById("modal-loading").classList.add("d-none");
 }
@@ -86,7 +90,11 @@ function hiddenCardUploadSucess() {
   document.getElementById("modal-success").classList.remove("d-block");
 }
 
-function showLoading() {
+function showLoading(action="upload") {
+  if (action){
+    document.getElementById("modal-action").textContent = action;
+  }
+
   document.getElementById("modal-loading").classList.remove("d-none");
   document.getElementById("modal-loading").classList.add("d-block");
 }
@@ -142,6 +150,7 @@ function resetPage() {
   clearListTemplate();
   listFiles = [];
   resetInputFile();
+  updateCountSize();
 }
 
 function resetInputFile() {
@@ -155,5 +164,7 @@ function redirectPage() {
 
 function updateCountSize() {
   let countSize = document.getElementById("count-size");
+  let countLength = document.getElementById("count-length");
   countSize.textContent = (getSizeTotalList() / 1024).toFixed(2);
+  countLength.textContent = listFiles.length;
 }
