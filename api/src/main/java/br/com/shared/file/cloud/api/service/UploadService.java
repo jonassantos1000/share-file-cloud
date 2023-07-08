@@ -31,7 +31,6 @@ public class UploadService {
 
 	public List<StorageFilesVO> findUpload(String token) {
 		List<StorageFilesVO> list = storageClient.getUpload(repository.findByToken(token).getStorageId());
-		list.forEach(e -> System.out.println(e.getName()));
 		return list;
 	}
 
