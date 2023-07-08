@@ -15,7 +15,7 @@
         <div class="container">
             <a class="navbar-brand d-flex" href="#">
                 <img src="./assets/img/logo.png" alt="Logo" class="img-fluid pe-2 col-1">
-                <h1 class="ps-3 fs-3 align-items-center d-flex text-black-50">Cloud Share</h1>
+                <h1 class="ps-3 fs-3 align-items-center d-flex text-info">Cloud Share</h1>
             </a>
         </div>
     </nav>
@@ -25,9 +25,10 @@
         <div class="d-flex flex-column align-items-center col-9 h-75">
             <div class="card col-7">
                 <div class="card-header d-flex justify-content-around align-items-center">
-                    <h5 class="card-title fs-4 col-6 text-wrap">Upload de arquivos <span class="fs-6">(Max 5)</span>
-                    </h5>
-
+                    <div class="d-flex flex-column">
+                        <h5 class="card-title fs-4 col-12 text-wrap">Upload de arquivos</h5>
+                        <p class="fs-6 m-0"><span id="count-size">0</span> MB / 5 MB</p>
+                    </div>
                     <div class="input-file btn col-sm-5 col-lg-2" id="file-container">
                         <img src="./assets/img/upload.png" alt="botao para upload" class="col-12">
                         <input type="file" name="arquivo" id="arquivo">
@@ -69,7 +70,7 @@
                     <div class="modal-body">
                         <p class="word-wrap">Os arquivos ficarão disponíveis por <span class="fw-bold">24 horas</span>,
                             você pode baixa-los através do navegador com o link abaixo:</p>
-                        <a href="#" id="link-download">http://teste.com.br</a>
+                        <a href="#" id="link-download"></a>
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="button" class="btn btn-primary" onclick="hiddenCardUploadSucess()">Copiar
@@ -81,10 +82,9 @@
 
     </main>
 
-    <footer class="bg-secondary">
+    <footer class="bg-dark">
         <div class="container p-2">
-            <h3 class="fs-6 text-center text-white-50">©2023 Cloud Share File. Todos os direitos reservados. Cloud Share
-                File.</h3>
+            <h3 class="fs-6 text-center text-info bg-dark">© 2023 Cloud Share File. Todos os direitos reservados. Cloud Share.</h3>
         </div>
     </footer>
 

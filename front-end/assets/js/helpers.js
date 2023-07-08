@@ -1,6 +1,15 @@
-function callListValidations() {
-  validButtonLinkUpload();
-  validButtonFile();
+function isValidFile(file) {
+  if (!file) {
+    return false;
+  }
+
+  if (!isFileSizeValid(file.size)) {
+    alert("O tamanho total dos arquivos ultrapassa o limite de 5 MB");
+    resetInputFile();
+    return false;
+  }
+
+  return true;
 }
 
 async function downloadFiles(id) {
@@ -115,20 +124,36 @@ function validButtonLinkUpload() {
     : (buttonUpload.disabled = false);
 }
 
-function validButtonFile() {
-  let file = document.getElementById("file-container");
-  listFiles.length < 5
-    ? file.classList.remove("d-none")
-    : file.classList.add("d-none");
+function isFileSizeValid(sizeFile) {
+  let sizeFileKb = sizeFile / 1024;
+  let sizeTotalList = getSizeTotalList();
+
+  return sizeTotalList + sizeFileKb < 1024 * maxUploadMB;
+}
+
+function getSizeTotalList() {
+  return (
+    listFiles.reduce((accumulator, file) => accumulator + file.fileSize, 0) /
+    1024
+  );
 }
 
 function resetPage() {
   clearListTemplate();
   listFiles = [];
+  resetInputFile();
+}
+
+function resetInputFile() {
   document.getElementById("arquivo").value = "";
 }
 
-function redirectPage(){
+function redirectPage() {
   const url = new URL(window.location.href);
   window.location.href = `${url.origin}${url.pathname}`;
+}
+
+function updateCountSize() {
+  let countSize = document.getElementById("count-size");
+  countSize.textContent = (getSizeTotalList() / 1024).toFixed(2);
 }

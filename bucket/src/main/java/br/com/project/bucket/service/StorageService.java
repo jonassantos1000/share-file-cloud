@@ -1,5 +1,6 @@
 package br.com.project.bucket.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +24,7 @@ public class StorageService {
 	private AbstractStorage storage;
 
 	public DataFileSave saveFile(Directory directory, String id, InfoFile file) {
+		file.setFileName(generateUniqueName(file.getFileName()));
 		return storage.saveFile(directory.getValue(), id, file);
 	}
 
@@ -41,25 +43,34 @@ public class StorageService {
 	public List<ResponseData> findDirectory(Directory directory, String id) {
 		return storage.getFilesInDirectory(directory.getValue(), id);
 	}
-	
+
 	public List<ResponseData> findDirectory(String idEncode) {
 		String path = decodeId(idEncode);
 		if (!path.contains("/")) {
 			throw new IllegalArgumentException("Diretório informado é invalido");
 		}
-		
+
 		String[] directory = path.split("/");
 		return storage.getFilesInDirectory(directory[0], directory[1]);
 	}
 
 	public DataFileSave saveFileAll(Directory directory, String directoryId, List<InfoFile> files) {
 		files.forEach(f -> saveFile(directory, directoryId, f));
-		
+
 		return new DataFileSave(storage.getLocation(directory.getValue(), directoryId, StringUtils.EMPTY));
 	}
 
 	private String decodeId(String fileId) {
 		return new String(Base64.decodeBase64(fileId));
+	}
+
+	private String generateUniqueName(String name) {
+		int positionDot = name.lastIndexOf(".");
+		String nameFile = (positionDot > 0) ? name.substring(0, positionDot) : name;
+		String extensionFile = (positionDot > 0) ? name.substring(positionDot) : StringUtils.EMPTY;
+		
+		nameFile += Instant.now().toEpochMilli() + extensionFile;
+		return nameFile;
 	}
 
 }

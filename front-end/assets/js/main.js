@@ -1,10 +1,12 @@
 var listFiles = [];
+var maxUploadMB = 5;
 var URL_API = "http://localhost:8082/api-ms/upload";
 
 async function addFile(file) {
-  if (!file) {
+  if (!isValidFile(file)){
     return;
   }
+
 
   let base64Value;
 
@@ -39,11 +41,11 @@ function insertFileList(fileObject) {
 }
 
 function refreshList() {
-  callListValidations();
-  let fileList = document.getElementById("list-files");
-
-  //clear list template
+  validButtonLinkUpload();
   clearListTemplate();
+  updateCountSize();
+
+  let fileList = document.getElementById("list-files");
 
   this.listFiles.forEach((file, index) => {
     let itemList = document.createElement("li");
@@ -81,7 +83,6 @@ function removeFileList(idElement) {
 
 async function executeUpload() {
   response = await sendFiles();
-  console.log(response);
   if (!response.id) {
     return alert(
       "Ocorreu falha durante o upload dos arquivos, aguarde um momento e tente novamente!"
