@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-service-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-service-ms
+  template:
+    metadata:
+      labels:
+        app: storage-service-ms
+    spec:
+      volumes:
+        - name: gcp-credentials
+          secret:
+            secretName: gcp-credentials
+      containers:
+        - name: storage-ms
+          image: us-central1-docker.pkg.dev/project-test-391316/repository-images/storage:v2
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SERVICE_URL
+              value: http://server-service-eureka:8081/eureka
+            - name: SERVER_PORT
+              value: '8083'
+            - name: BUCKET_NAME
+              value: project-storage-test
+          volumeMounts:
+            - name: gcp-credentials
+              mountPath: /app/gcp-account-file.json
+              subPath: gcp-account-file.json

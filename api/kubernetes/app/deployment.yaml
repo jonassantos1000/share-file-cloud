@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-service-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-service-ms
+  template:
+    metadata:
+      labels:
+        app: api-service-ms
+    spec:
+      containers:
+        - name: api-ms
+          image: us-central1-docker.pkg.dev/project-test-391316/repository-images/api:v2
+          ports:
+            - containerPort: 8084
+          envFrom:
+            - configMapRef:
+                name: configmap

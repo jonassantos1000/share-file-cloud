@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service-ms
+  template:
+    metadata:
+      labels:
+        app: gateway-service-ms
+    spec:
+      containers:
+        - name: gateway-ms
+          image: us-central1-docker.pkg.dev/project-test-391316/repository-images/gateway:v2
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SERVICE_URL
+              value: http://server-service-eureka:8081/eureka

@@ -74,8 +74,8 @@ function hasIdParam(param) {
   return urlParams.has(param);
 }
 
-function hiddenLoading(action=null) {
-  if (action){
+function hiddenLoading(action = null) {
+  if (action) {
     document.getElementById("modal-action").textContent = action;
   }
 
@@ -90,8 +90,8 @@ function hiddenCardUploadSucess() {
   document.getElementById("modal-success").classList.remove("d-block");
 }
 
-function showLoading(action="upload") {
-  if (action){
+function showLoading(action = "upload") {
+  if (action) {
     document.getElementById("modal-action").textContent = action;
   }
 

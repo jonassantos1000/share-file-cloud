@@ -3,10 +3,9 @@ var maxUploadMB = 5;
 var URL_API = "http://localhost:8082/api-ms/upload";
 
 async function addFile(file) {
-  if (!isValidFile(file)){
+  if (!isValidFile(file)) {
     return;
   }
-
 
   let base64Value;
 
@@ -89,16 +88,16 @@ async function executeUpload() {
     );
   }
 
-  resetPage()
+  resetPage();
   showCardUploadSucess();
   generateLinkDownload(response.id);
 }
 
-async function executeDownload(id){
-  showLoading("download")
+async function executeDownload(id) {
+  showLoading("download");
   await downloadFiles(id);
   const url = new URL(window.location.href);
-  window.location.href = `${url.origin}${url.pathname}`
+  window.location.href = `${url.origin}${url.pathname}`;
   hiddenLoading();
 }
 

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-service-eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server-service-eureka
+  template:
+    metadata:
+      labels:
+        app: server-service-eureka
+    spec:
+      containers:
+        - name: server-eureka
+          image: us-central1-docker.pkg.dev/project-test-391316/repository-images/server-eureka:v1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SERVICE_URL
+              value: http://server-service-eureka:8081/eureka
