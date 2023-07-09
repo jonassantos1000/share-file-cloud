@@ -12,6 +12,14 @@ function isValidFile(file) {
   return true;
 }
 
+function clipBoard(conteudo){
+  let textArea = document.createElement("textarea");
+  textArea.value = conteudo;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand('copy');
+}
+
 async function downloadFiles(id) {
   let files = await getFiles(id);
 
@@ -52,7 +60,7 @@ const fileToBase64 = (file) =>
   });
 
 function generateLinkDownload(id) {
-  linkDownload = `${window.location.href}?id=${id}`;
+  linkDownload = `${window.location.href}?id=${id}`.replace(/\?.*?id=/, '?id=');
   let elementLink = document.getElementById("link-download");
   elementLink.href = linkDownload;
   elementLink.textContent = linkDownload;
@@ -84,8 +92,7 @@ function hiddenLoading(action = null) {
 }
 
 function hiddenCardUploadSucess() {
-  let valueLink = document.getElementById("link-download").textContent;
-  navigator.clipboard.writeText(valueLink);
+  clipBoard(document.getElementById("link-download").textContent);
   document.getElementById("modal-success").classList.remove("show");
   document.getElementById("modal-success").classList.remove("d-block");
 }
