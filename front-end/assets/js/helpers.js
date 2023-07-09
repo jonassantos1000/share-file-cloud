@@ -18,6 +18,7 @@ function clipBoard(conteudo){
   document.body.appendChild(textArea);
   textArea.select();
   document.execCommand('copy');
+  document.body.removeChild(textArea);
 }
 
 async function downloadFiles(id) {
