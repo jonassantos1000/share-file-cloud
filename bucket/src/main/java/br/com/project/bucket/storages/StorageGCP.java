@@ -55,7 +55,7 @@ public class StorageGCP implements AbstractStorage {
 	@Override
 	public boolean deleteDirectory(String directory) {
 		Iterable<Blob> blobs = storage.list(bucketName, Storage.BlobListOption.prefix("/")).iterateAll();
-		blobs.forEach(blob -> blob.delete());
+		blobs.forEach(Blob::delete);
 
 		return true;
 	}
