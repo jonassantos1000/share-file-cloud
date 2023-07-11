@@ -13,7 +13,7 @@ public class HandlerException {
 
 	@ExceptionHandler(EmailException.class)
 	public ResponseEntity<ResponseError> tratarErro404(EmailException e, HttpServletRequest request){
-		ResponseError error = new ResponseError(e.getMessage(), request.getRequestURI());
+		ResponseError error = new ResponseError(e.getMessage(), request.getRequestURI(), e.getCause().toString());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 }

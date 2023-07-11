@@ -39,6 +39,7 @@ public class EmailService {
 			mailSender.send(mail);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EmailException("Não foi possivel realizar o envio do e-mail.");
 		}
 	}

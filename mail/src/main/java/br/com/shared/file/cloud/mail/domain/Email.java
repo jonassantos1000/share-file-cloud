@@ -13,9 +13,7 @@ public class Email {
 	}
 	
 	public Email(EmailVO emailVO) {
-		this.addressEmail = emailVO.getEmail();
-		this.subject = emailVO.getSubject();
-		this.content = emailVO.getContent();
+		this(emailVO.getEmail(), emailVO.getSubject(), emailVO.getContent());
 	}
 
 	public Email(String email, String subject, String content) {

@@ -1,9 +1,18 @@
 package br.com.shared.file.cloud.mail.domain.vo;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class EmailVO {
 
+	@NotBlank
 	private String subject;
+	
+	@NotBlank
+	@Email
 	private String email;
+	
+	@NotBlank
 	private String content;
 
 	public EmailVO() {
