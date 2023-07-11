@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.shared.file.cloud.mail.domain.Email;
 import br.com.shared.file.cloud.mail.domain.dto.EmailDTO;
+import br.com.shared.file.cloud.mail.domain.enums.Status;
 import br.com.shared.file.cloud.mail.exception.EmailException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -22,7 +23,7 @@ public class EmailService {
 	
 	public EmailDTO requestSend(Email email) {
 		sendEmail(email.getSubject(), email.getAddressEmail(), email.getContent());
-		return new EmailDTO();
+		return new EmailDTO(Status.ENVIADO);
 	}
 
 	private void sendEmail(String subject, String emailTarget, String content) {
@@ -38,7 +39,7 @@ public class EmailService {
 			mailSender.send(mail);
 
 		} catch (Exception e) {
-			throw new EmailException("Não foi possivel processar o envio do e-mail.");
+			throw new EmailException("Não foi possivel realizar o envio do e-mail.");
 		}
 	}
 }
