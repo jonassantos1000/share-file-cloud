@@ -1,6 +1,8 @@
 var listFiles = [];
 var maxUploadMB = 5;
-var URL_API = "http://localhost:8082/api-ms/upload";
+var option = "radio-link"
+var URL_API_UPLOAD = "http://localhost:8082/api-ms/upload";
+var URL_API_EMAIL = "http://localhost:8082/mail-ms/email";
 
 async function addFile(file) {
   if (!isValidFile(file)) {
@@ -81,6 +83,11 @@ function removeFileList(idElement) {
 }
 
 async function executeUpload() {
+  const isValid = await isValidAction();
+  if (!isValid){
+    return;
+  }
+
   response = await sendFiles();
   if (!response.id) {
     return alert(
@@ -88,9 +95,15 @@ async function executeUpload() {
     );
   }
 
-  resetPage();
+  if (option == "radio-email"){
+    response = await sendEmail(response.id);
+    response ? showCardUploadSucess() : showConfig("radio-link", "Não foi possivel enviar o link via e-mail, o link para download esta abaixo.");
+  }else{
+    generateLinkDownload(response.id);
+  }
+
   showCardUploadSucess();
-  generateLinkDownload(response.id);
+  resetPage();
 }
 
 async function executeDownload(id) {
@@ -108,6 +121,15 @@ document.getElementById("arquivo").addEventListener("change", function () {
 
 document.getElementById("link-upload").addEventListener("click", function () {
   executeUpload();
+});
+
+const radios = document.querySelectorAll('input[name="flexRadioDefault"]');
+
+radios.forEach(radio => {
+    radio.addEventListener('click', () => {
+      option = radio.id;
+      showConfig(radio.id);
+    });
 });
 
 if (hasIdParam("id")) {

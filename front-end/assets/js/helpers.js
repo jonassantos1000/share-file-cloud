@@ -12,6 +12,17 @@ function isValidFile(file) {
   return true;
 }
 
+async function isValidAction(){
+  const radioSelecionado = document.querySelector('input[name="flexRadioDefault"]:checked');
+  const emailValue = document.getElementById("email-value").value;
+
+  if (radioSelecionado.id == "radio-email" && !emailValue){
+    alert("Informe para qual e-mail o link deverá ser enviado.")
+    return false;
+  }
+  return true;
+}
+
 function clipBoard(conteudo){
   let textArea = document.createElement("textarea");
   textArea.value = conteudo;
@@ -65,10 +76,11 @@ function generateLinkDownload(id) {
   let elementLink = document.getElementById("link-download");
   elementLink.href = linkDownload;
   elementLink.textContent = linkDownload;
+  return linkDownload
 }
 
 function getFiles(id) {
-  return fetch(`${URL_API}/${id}`)
+  return fetch(`${URL_API_UPLOAD}/${id}`)
     .then((dataset) => {
       return dataset.json();
     })
@@ -114,7 +126,7 @@ function showCardUploadSucess() {
 
 function sendFiles() {
   showLoading();
-  return fetch(URL_API, {
+  return fetch(URL_API_UPLOAD, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -131,6 +143,56 @@ function sendFiles() {
       console.log(error);
       return;
     });
+}
+
+async function sendEmail(id) {
+  const email = document.getElementById("email-value").value;
+  const payload = {subject: "Cloud Share File: Link upload", email: email, content: `Link para download: ${generateLinkDownload(id)}`};
+  showLoading("envio do link");
+  return fetch(URL_API_EMAIL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+    mode: "cors",
+  })
+    .then((response) => {
+      hiddenLoading();
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        console.log('Requisição não bem-sucedida. status:', response.status);
+        return false;
+      }
+    })
+    .catch((error) => {
+      hiddenLoading();
+      console.log(error);
+      return false;
+    });
+}
+
+function showConfig(idElement, alertValue=false){
+  if (idElement == "radio-link"){
+    document.getElementById("link-upload").textContent = "Obter link";
+    document.getElementById("upload-link").classList.remove("d-none");
+    document.getElementById("input-email").classList.replace("d-block", "d-none")
+    document.getElementById("upload-email").classList.add("d-none");
+    document.getElementById("link-download").classList.remove("d-none");
+  }
+
+  if (idElement == "radio-email"){
+    document.getElementById("link-upload").textContent = "Enviar link";
+    document.getElementById("upload-link").classList.add("d-none");
+    document.getElementById("input-email").classList.replace("d-none", "d-block")
+    document.getElementById("upload-email").classList.remove("d-none");
+    document.getElementById("link-download").classList.add("d-none");
+  }
+
+  if (alertValue){
+    alert(alertValue);
+  }
 }
 
 function validButtonLinkUpload() {
@@ -163,6 +225,8 @@ function resetPage() {
 
 function resetInputFile() {
   document.getElementById("arquivo").value = "";
+  document.getElementById("link-upload").disabled = true;
+  document.getElementById("radio-link").checked = true;
 }
 
 function redirectPage() {
